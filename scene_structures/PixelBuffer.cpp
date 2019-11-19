@@ -25,18 +25,24 @@ PixelBuffer::PixelBuffer(unsigned int width, unsigned int height, v3f background
 
 void PixelBuffer::setPixel(int x, int y, v3f color)
 {
-	if (x < 0 || y < 0 || x >= int(m_width) || y >= int(m_height))
+	if (x < 0 || y < 0 || x > int(m_width) || y > int(m_height))
 		pixelOutOfBounds(x, y, "set");
+	if (x == int(m_width))
+		x = m_width - 1;
+	if (y == int(m_height))
+		y = m_height - 1;
 
 	m_data[x + y * m_width] = color;
-	RGBApixel c = {color.x * 255, color.y * 255, color.z * 255, 1};
-	m_image.SetPixel(x, y, c);
 }
 
 v3f PixelBuffer::getPixel(int x, int y)
 {
-	if (x < 0 || y < 0 || x >= int(m_width) || y >= int(m_height))
+	if (x < 0 || y < 0 || x > int(m_width) || y > int(m_height))
 		pixelOutOfBounds(x, y, "get");
+	if (x == int(m_width))
+		x = m_width - 1;
+	if (y == int(m_height))
+		y = m_height - 1;
 	v3f color = m_data[x + y * m_width];
 	return color;
 }
@@ -48,9 +54,9 @@ void PixelBuffer::saveAs(std::string file_name)
 		for (unsigned int j = 0; j < m_height; j++)
 		{
 			c = { 
-				ebmpBYTE(m_data[i + j * m_width].x * 255), 
-				ebmpBYTE(m_data[i + j * m_width].y * 255), 
 				ebmpBYTE(m_data[i + j * m_width].z * 255), 
+				ebmpBYTE(m_data[i + j * m_width].y * 255), 
+				ebmpBYTE(m_data[i + j * m_width].x * 255), 
 				1 };
 			m_image.SetPixel(i, j, c);
 		}

@@ -1,8 +1,12 @@
 #include <iostream>
+#include <vector>
+#include "pipeline/VertexShader.h"
 #include "file_library/EasyBMP.h"
-#include "scene_data/PixelBuffer.h"
+#include "scene_structures/PixelBuffer.h"
 #include "Definitions.h"
-#include "scene_data/Texture2D.h"
+#include "scene_structures/Texture2D.h"
+
+std::vector<Point> vertex_buffer_object;
 
 int main()
 {
@@ -10,23 +14,29 @@ int main()
 
 	PixelBuffer f(640, 480);
 
-	/*for (int i = 0; i < 640; i++)
-		for (int j = 0; j < 480; j++)
-			f.setPixel(i, j, v3f(float(i) / 640, 1 - float(j) / 480, 0));
-	for (int i = 0; i < 640; i++)
-		for (int j = 0; j < 480; j++)
-			f.setPixel(i, j, v3f(1) - f.getPixel(i, j));*/
+	std::vector<Point> VBO;
+	std::vector<int> VAO;
+	glm::mat4 transform_matrix(0);
 
-	int xs = 640;
-	int ys = 480;
+	Point p0;
+	p0.position = v4f(1, 0, 0, 1);
+	Point p1;
+	p1.position = v4f(1, 1, 0, 1);
+	Point p2;
+	p2.position = v4f(0, 1, 0, 1);
 
-	Texture2D t("fox.bmp", true);
-	for (int i = 0; i < xs; i++)
-		for (int j = 0; j < ys; j++)
-			f.setPixel(i, j, t.sample(v2f(i * 3.f/xs, j * 2.f/ys)));
+	VBO.push_back(p0);
+	VBO.push_back(p1);
+	VBO.push_back(p2);
+	VAO.push_back(0);
+	VAO.push_back(1);
+	VAO.push_back(2);
 
+	OBJ first{VBO, VAO, transform_matrix};
+
+	VertexShader vs(&f);
+
+	vs.render(first);
 
 	f.saveAs("test");
-
-
 }
