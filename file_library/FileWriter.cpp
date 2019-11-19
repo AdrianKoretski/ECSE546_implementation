@@ -7,7 +7,7 @@
 
 #pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
 
-FileWriter::FileWriter(unsigned int width, unsigned int height, v3f background_color = v3f(0))
+FileWriter::FileWriter(unsigned int width, unsigned int height, v3f background_color)
 {
 	m_data = (v3f*)malloc(width * height * sizeof(v3f));									// Set up the pixel buffer.
 	m_image.SetSize(width, height);															// Set up the output bmp.
