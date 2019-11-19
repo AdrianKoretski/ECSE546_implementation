@@ -1,4 +1,4 @@
-#include "FileWriter.h"
+#include "PixelBuffer.h"
 
 #include <fstream>
 #include <iostream>
@@ -7,7 +7,7 @@
 
 #pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
 
-FileWriter::FileWriter(unsigned int width, unsigned int height, v3f background_color)
+PixelBuffer::PixelBuffer(unsigned int width, unsigned int height, v3f background_color)
 {
 	m_data = (v3f*)malloc(width * height * sizeof(v3f));									// Set up the pixel buffer.
 	m_image.SetSize(width, height);															// Set up the output bmp.
@@ -23,7 +23,7 @@ FileWriter::FileWriter(unsigned int width, unsigned int height, v3f background_c
 	m_height = height;
 }
 
-void FileWriter::setPixel(int x, int y, v3f color)
+void PixelBuffer::setPixel(int x, int y, v3f color)
 {
 	if (x < 0 || y < 0 || x >= m_width || y >= m_height)
 		pixelOutOfBounds(x, y, "set");
@@ -33,7 +33,7 @@ void FileWriter::setPixel(int x, int y, v3f color)
 	m_image.SetPixel(x, y, c);
 }
 
-v3f FileWriter::getPixel(int x, int y)
+v3f PixelBuffer::getPixel(int x, int y)
 {
 	if (x < 0 || y < 0 || x >= m_width || y >= m_height)
 		pixelOutOfBounds(x, y, "get");
@@ -41,7 +41,7 @@ v3f FileWriter::getPixel(int x, int y)
 	return color;
 }
 
-void FileWriter::saveAs(std::string file_name)
+void PixelBuffer::saveAs(std::string file_name)
 {
 	RGBApixel c;
 	for (int i = 0; i < m_width; i++)
@@ -58,7 +58,7 @@ void FileWriter::saveAs(std::string file_name)
 	std::cout << "File successfully saved as " << file_name << "." << std::endl;
 }
 
-void FileWriter::pixelOutOfBounds(int x, int y, std::string get_or_set)					// Error handling.
+void PixelBuffer::pixelOutOfBounds(int x, int y, std::string get_or_set)					// Error handling.
 {
 	std::cout << "\aERROR: Could not " << get_or_set << " pixel value";
 	if (x < 0 || x >= m_width)
@@ -83,7 +83,7 @@ void FileWriter::pixelOutOfBounds(int x, int y, std::string get_or_set)					// E
 
 	std::cout << "Press enter key to exit." << std::endl;
 
-	getchar();
+	auto temp = getchar();
 
 	exit(2);
 }

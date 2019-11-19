@@ -1,13 +1,13 @@
 #pragma once
 
 #include <string>
-#include "EasyBMP.h"
-#include "../Definitions.h"
+#include "file_library/EasyBMP.h"
+#include "Definitions.h"
 
-class FileWriter
+class PixelBuffer
 {
 public:
-	FileWriter(unsigned int width, unsigned int height, v3f background_color = v3f(0));
+	PixelBuffer(unsigned int width, unsigned int height, v3f background_color = v3f(0));
 
 	void setPixel(int x, int y, v3f color);
 
