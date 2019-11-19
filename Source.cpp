@@ -25,12 +25,25 @@ int main()
 	Point p2;
 	p2.position = v4f(0, 1, 0, 1);
 
+	Point p3;
+	p3.position = v4f(-1, 0, 0, 1);
+	Point p4;
+	p4.position = v4f(-1, -1, 0, 1);
+	Point p5;
+	p5.position = v4f(0, -1, 0, 1);
+
 	VBO.push_back(p0);
 	VBO.push_back(p1);
 	VBO.push_back(p2);
+	VBO.push_back(p3);
+	VBO.push_back(p4);
+	VBO.push_back(p5);
 	VAO.push_back(0);
 	VAO.push_back(1);
 	VAO.push_back(2);
+	VAO.push_back(3);
+	VAO.push_back(4);
+	VAO.push_back(5);
 
 	OBJ first{VBO, VAO, transform_matrix};
 
