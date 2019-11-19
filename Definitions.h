@@ -13,6 +13,6 @@ struct vertex
 	v4f position;
 	v3f color;
 	v3f normal;
-	v2f texture;
+	v2f texture_coordinates;
 	Texture2D* texture;
 };

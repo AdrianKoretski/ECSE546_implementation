@@ -19,7 +19,7 @@
 *************************************************/
 
 #include "EasyBMP.h"
-
+#pragma warning (disable : 26495 26451 6001 4101)
 /* These functions are defined in EasyBMP.h */
 
 bool EasyBMPwarnings = true;

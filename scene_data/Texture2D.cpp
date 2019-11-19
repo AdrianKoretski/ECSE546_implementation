@@ -1,5 +1,7 @@
 #include "Texture2D.h"
 
+#pragma warning(disable : 4244) 
+
 BMP* Texture2D::m_default;
 
 Texture2D::Texture2D(std::string file_name, bool is_tiled)
@@ -38,8 +40,6 @@ v3f Texture2D::sample(v2f position)
 	while (position.y >= 1)
 		position.y -= 1;
 
-	v4f weights;
-	v2f local_position;
 	int x_position = position.x * sampled_image->TellWidth();
 	int y_position = position.y * sampled_image->TellHeight();
 

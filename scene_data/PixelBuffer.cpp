@@ -5,7 +5,7 @@
 #include <iomanip>
 #include <ctime>
 
-#pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
+#pragma warning(disable : 4996 4244 4838) //_CRT_SECURE_NO_WARNINGS
 
 PixelBuffer::PixelBuffer(unsigned int width, unsigned int height, v3f background_color)
 {
@@ -15,8 +15,8 @@ PixelBuffer::PixelBuffer(unsigned int width, unsigned int height, v3f background
 
 	RGBApixel b = { background_color.x, background_color.y, background_color.z, 1};			// Clear to background colour.
 
-	for (int i = 0; i < width; i++)
-		for (int j = 0; j < height; j++)
+	for (unsigned int i = 0; i < width; i++)
+		for (unsigned int j = 0; j < height; j++)
 			m_image.SetPixel(i, j, b);
 
 	m_width = width;
@@ -25,7 +25,7 @@ PixelBuffer::PixelBuffer(unsigned int width, unsigned int height, v3f background
 
 void PixelBuffer::setPixel(int x, int y, v3f color)
 {
-	if (x < 0 || y < 0 || x >= m_width || y >= m_height)
+	if (x < 0 || y < 0 || x >= int(m_width) || y >= int(m_height))
 		pixelOutOfBounds(x, y, "set");
 
 	m_data[x + y * m_width] = color;
@@ -35,7 +35,7 @@ void PixelBuffer::setPixel(int x, int y, v3f color)
 
 v3f PixelBuffer::getPixel(int x, int y)
 {
-	if (x < 0 || y < 0 || x >= m_width || y >= m_height)
+	if (x < 0 || y < 0 || x >= int(m_width) || y >= int(m_height))
 		pixelOutOfBounds(x, y, "get");
 	v3f color = m_data[x + y * m_width];
 	return color;
@@ -44,8 +44,8 @@ v3f PixelBuffer::getPixel(int x, int y)
 void PixelBuffer::saveAs(std::string file_name)
 {
 	RGBApixel c;
-	for (int i = 0; i < m_width; i++)
-		for (int j = 0; j < m_height; j++)
+	for (unsigned int i = 0; i < m_width; i++)
+		for (unsigned int j = 0; j < m_height; j++)
 		{
 			c = { 
 				ebmpBYTE(m_data[i + j * m_width].x * 255), 
@@ -61,9 +61,9 @@ void PixelBuffer::saveAs(std::string file_name)
 void PixelBuffer::pixelOutOfBounds(int x, int y, std::string get_or_set)					// Error handling.
 {
 	std::cout << "\aERROR: Could not " << get_or_set << " pixel value";
-	if (x < 0 || x >= m_width)
+	if (x < 0 || x >= int(m_width))
 		std::cout << ", x coordinate (" << x << ") out of bounds";
-	if (y < 0 || y >= m_height)
+	if (y < 0 || y >= int(m_height))
 		std::cout << ", y coordinate (" << y << ") out of bounds";
 	std::cout << ". Image size is " << m_width << " by " << m_height << ". (width by height)\n" << std::endl;
 

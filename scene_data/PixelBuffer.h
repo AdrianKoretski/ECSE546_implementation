@@ -1,8 +1,8 @@
 #pragma once
 
 #include <string>
-#include "file_library/EasyBMP.h"
-#include "Definitions.h"
+#include "../file_library/EasyBMP.h"
+#include "../Definitions.h"
 
 class PixelBuffer
 {

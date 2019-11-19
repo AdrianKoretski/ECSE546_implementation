@@ -2,8 +2,8 @@
 
 #include <string>
 
-#include "Definitions.h"
-#include "file_library/EasyBMP.h"
+#include "../Definitions.h"
+#include "../file_library/EasyBMP.h"
 
 class Texture2D
 {

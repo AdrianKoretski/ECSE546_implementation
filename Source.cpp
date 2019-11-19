@@ -1,8 +1,8 @@
 #include <iostream>
 #include "file_library/EasyBMP.h"
-#include "PixelBuffer.h"
+#include "scene_data/PixelBuffer.h"
 #include "Definitions.h"
-#include "Texture2D.h"
+#include "scene_data/Texture2D.h"
 
 int main()
 {
@@ -23,7 +23,7 @@ int main()
 	Texture2D t("fox.bmp", true);
 	for (int i = 0; i < xs; i++)
 		for (int j = 0; j < ys; j++)
-			f.setPixel(i, j, t.sample(v2f(i * 2.f/xs, j * 2.f/ys)));
+			f.setPixel(i, j, t.sample(v2f(i * 3.f/xs, j * 2.f/ys)));
 
 
 	f.saveAs("test");
