@@ -76,9 +76,9 @@ void Rasterizer::interpolate(Point p0, Point p1, Point p2)
 	float d_w = 1.f / m_buffer_width;
 	float d_h = 1.f / m_buffer_height;
 
-	for (float i = float(int(min_x * m_buffer_width)) / m_buffer_width; i <= max_x; i += d_w)	// TODO: This is janky. It might need to change.
+	for (float i = float(int(min_x * m_buffer_width)) / m_buffer_width + d_w/2; i <= max_x; i += d_w)	// TODO: This is janky. It might need to change.
 	{
-		for (float j = float(int(min_y * m_buffer_height)) / m_buffer_height; j <= max_y; j += d_h)
+		for (float j = float(int(min_y * m_buffer_height)) / m_buffer_height + d_h/2; j <= max_y; j += d_h)
 		{
 			if (isContained(p0.position, p1.position, p2.position, v2f(i * 2 - 1, j * 2 - 1)))
 			{
