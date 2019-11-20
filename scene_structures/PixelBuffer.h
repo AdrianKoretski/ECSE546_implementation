@@ -9,6 +9,8 @@ class PixelBuffer
 public:
 	PixelBuffer(unsigned int width, unsigned int height, v3f background_color = v3f(0));
 
+	void clearBuffer();
+
 	void setPixel(int x, int y, v3f color);
 
 	v3f getPixel(int x, int y);
@@ -24,6 +26,8 @@ private:
 
 	unsigned int m_width;
 	unsigned int m_height;
+
+	v3f m_background;
 
 	void pixelOutOfBounds(int x, int y, std::string get_or_set);
 };

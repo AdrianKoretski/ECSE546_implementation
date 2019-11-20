@@ -13,14 +13,19 @@ PixelBuffer::PixelBuffer(unsigned int width, unsigned int height, v3f background
 	m_image.SetSize(width, height);															// Set up the output bmp.
 	m_image.SetBitDepth(24);
 
-	RGBApixel b = { background_color.x, background_color.y, background_color.z, 1};			// Clear to background colour.
-
-	for (unsigned int i = 0; i < width; i++)
-		for (unsigned int j = 0; j < height; j++)
-			m_image.SetPixel(i, j, b);
+	m_background = background_color;
 
 	m_width = width;
 	m_height = height;
+
+	clearBuffer();
+}
+
+void PixelBuffer::clearBuffer()
+{
+	for (unsigned int i = 0; i < m_width; i++)
+		for (unsigned int j = 0; j < m_height; j++)
+			m_data[i + j * m_width] = m_background;
 }
 
 void PixelBuffer::setPixel(int x, int y, v3f color)

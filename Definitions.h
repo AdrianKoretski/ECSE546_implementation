@@ -36,7 +36,7 @@ struct Camera
 	v3f at = v3f(0, 0, -1);
 	bool is_project = false;
 	glm::mat4 camera_matrix;
-	glm::mat4 perspective_matrix;
+	glm::mat4 perspective_matrix = glm::mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 	void generate_matrix()
 	{
 		at = glm::normalize(at);
@@ -49,22 +49,40 @@ struct Camera
 			position.x, position.y, position.z, 1
 		);
 
+		camera_matrix = glm::inverse(camera_matrix);
+
 		v3f delta;
 		delta.y = tan(fov / 2);
 		delta.x = delta.y * aspect_ratio;
 		delta.z = 1;
-		std::cout << delta.y << std::endl;
+
+		float l = position.x - delta.x;
+		float r = position.x + delta.x;
+		float b = position.y - delta.y;
+		float t = position.y + delta.y;
+		float n = 1;
+		float f = -1;
+
 		perspective_matrix = glm::mat4(
-			1.f / delta.x, 0, 0, 0,
-			0, 1.f / delta.y, 0, 0,
-			0, 0, 1.f / delta.z, 0,
-			0, 0, 0, 1
+			2.f / (r - l),		0,					0,					0,
+			0,					2.f / (t - b),		0,					0,
+			0,					0,					2.f / (n - f),		0,
+			0,					0,					0,					1
 		);
+
+		perspective_matrix = glm::mat4(
+			2 * n / (r - l),	0,					(l + r) / (l - r),	0,
+			0,					2 * n / (t - b),	(b + t) / (b - t),	0,
+			0,					0,					(f + n) / (n - f),	2*f*n/(f-n),
+			0,					0,					1,					0
+		);
+
+		perspective_matrix = glm::transpose(perspective_matrix);
 	}
 };
 
 struct Scene
 {
 	std::vector<OBJ> obj;
-	glm::mat4 perspective_matrix = glm::mat4(0.5, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 1);
+	glm::mat4 perspective_matrix = glm::mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 };

@@ -13,10 +13,17 @@ int main()
 	std::cout << "hello rasterization engine" << std::endl;
 
 	PixelBuffer f(640, 480);
+	float theta = 0;
 
 	std::vector<Point> VBO;
 	std::vector<int> VAO;
-	glm::mat4 transform_matrix(0);
+	glm::mat4 transform_matrix(
+		cos(theta), 0, -sin(theta), 0, 
+		0, 1, 0, 0, 
+		sin(theta), 0, cos(theta), 0,
+		0, 0, 0, 1);
+
+
 
 	Point p0;
 	Point p1;
@@ -27,15 +34,15 @@ int main()
 	Point p6;
 	Point p7;
 	Point p8;
-	p0.position = v4f(-1, 1, 0, 1);
-	p1.position = v4f(0, 1, 0, 1);
-	p2.position = v4f(1, 1, 0, 1);
-	p3.position = v4f(-1, 0, 0, 1);
+	p0.position = v4f(-0.5, 0.5, 0, 1);
+	p1.position = v4f(0, 0.5, 0, 1);
+	p2.position = v4f(0.5, 0.5, 0, 1);
+	p3.position = v4f(-0.5, 0, 0, 1);
 	p4.position = v4f(0, 0, 0, 1);
-	p5.position = v4f(1, 0, 0, 1);
-	p6.position = v4f(-1, -1, 0, 1);
-	p7.position = v4f(0, -1, 0, 1);
-	p8.position = v4f(1, -1, 0, 1);
+	p5.position = v4f(0.5, 0, 0, 1);
+	p6.position = v4f(-0.5, -0.5, 0, 1);
+	p7.position = v4f(0, -0.5, 0, 1);
+	p8.position = v4f(0.5, -0.5, 0, 1);
 
 
 	VBO.push_back(p0);
@@ -82,16 +89,30 @@ int main()
 	VertexShader vs(&f);
 
 	Camera cam;
-	cam.position = v3f(1, 0, 2);
+	cam.position = v3f(0, 0, 2);
 	cam.generate_matrix();
 
 	Scene scene;
 
-	scene.perspective_matrix = scene.perspective_matrix * cam.perspective_matrix * cam.camera_matrix;
+	scene.perspective_matrix = cam.perspective_matrix * cam.camera_matrix;
 
 	scene.obj.push_back(first);
 
 	vs.render(scene);
 
-	f.saveAs("test");
+	//f.saveAs("test");
+
+	for (int count = 0; count < 628; count++)
+	{
+		scene.obj.at(0).transform_matrix = glm::mat4(
+			cos(theta), 0, -sin(theta), 0,
+			0, 1, 0, 0,
+			sin(theta), 0, cos(theta), 0,
+			0, 0, 0, 1
+		);
+		f.clearBuffer();
+		vs.render(scene);
+		f.saveAs("test" + std::to_string(count));
+		theta += 0.01;
+	}
 }

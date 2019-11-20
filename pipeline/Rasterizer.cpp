@@ -10,7 +10,7 @@ Rasterizer::Rasterizer(PixelBuffer* pixel_buffer)
 
 void Rasterizer::render(OBJ obj)
 {
-
+	m_interpolated_data.clear();
 	for (int i = 0; i < obj.VAO.size(); i += 3)
 	{
 		obj.VBO.at(obj.VAO.at(i + 0)).color = v3f(i / 6 % 2, i / 3 % 2, 0.5);
@@ -87,19 +87,25 @@ void Rasterizer::interpolate(Point p0, Point p1, Point p2)
 	}
 }
 
-bool Rasterizer::isContained(v3f p0, v3f p1, v3f p2, v2f p)
+bool Rasterizer::isContained(v3f p0, v3f p1, v3f p2, v2f p)		// TODO: optimise.
 {
+	bool i0 = false;
+	bool i1 = false;
+	bool i2 = false;
+
 	v3f v(p1.x - p0.x, p1.y - p0.y, 0);
 	v3f e(p.x - p0.x, p.y - p0.y, 0);
 	if (glm::cross(v, e).z < 0)
-		return false;
+		i0 = true;
 	v = v3f(p2.x - p1.x, p2.y - p1.y, 0);
 	e = v3f(p.x - p1.x, p.y - p1.y, 0);
 	if (glm::cross(v, e).z < 0)
-		return false;
+		i1 = true;
 	v = v3f(p0.x - p2.x, p0.y - p2.y, 0);
 	e = v3f(p.x - p2.x, p.y - p2.y, 0);
 	if (glm::cross(v, e).z < 0)
-		return false;
-	return true;
+		i2 = true;
+	if ((i0 && i1 && i2) || !(i0 || i1 || i2))
+		return true;
+	return false;
 }
