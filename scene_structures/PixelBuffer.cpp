@@ -32,7 +32,7 @@ void PixelBuffer::setPixel(int x, int y, v3f color)
 	if (y == int(m_height))
 		y = m_height - 1;
 
-	m_data[x + y * m_width] = color;
+	m_data[x + (m_height - y - 1) * m_width] = color;
 }
 
 v3f PixelBuffer::getPixel(int x, int y)
@@ -62,6 +62,16 @@ void PixelBuffer::saveAs(std::string file_name)
 		}
 	m_image.WriteToFile((file_name.append(".bmp")).c_str());
 	std::cout << "File successfully saved as " << file_name << "." << std::endl;
+}
+
+int PixelBuffer::getWidth()
+{
+	return m_image.TellWidth();
+}
+
+int PixelBuffer::getHeight()
+{
+	return m_image.TellHeight();
 }
 
 void PixelBuffer::pixelOutOfBounds(int x, int y, std::string get_or_set)					// Error handling.

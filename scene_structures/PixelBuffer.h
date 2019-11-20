@@ -14,6 +14,9 @@ public:
 	v3f getPixel(int x, int y);
 
 	void saveAs(std::string file_name);
+
+	int getWidth();
+	int getHeight();
 private:
 	v3f* m_data;
 

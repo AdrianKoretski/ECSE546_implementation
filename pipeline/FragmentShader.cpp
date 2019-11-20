@@ -9,9 +9,9 @@ void FragmentShader::render(std::vector<Point> data)
 {
 	for (int i = 0; i < data.size(); i++)
 	{
-		int vp_x = (data.at(i).position.x + 1) * 640 / 2;
-		int vp_y = (data.at(i).position.y + 1) * 480 / 2;
+		int vp_x = (data.at(i).position.x) * m_pixel_buffer->getWidth();
+		int vp_y = (data.at(i).position.y) * m_pixel_buffer->getHeight();
 
-		m_pixel_buffer->setPixel(vp_x, vp_y, v3f(0, 1, 1));
+		m_pixel_buffer->setPixel(vp_x, vp_y, data.at(i).color);
 	}
 }

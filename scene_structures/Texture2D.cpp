@@ -45,7 +45,7 @@ v3f Texture2D::sample(v2f position)
 
 	auto a = sampled_image->GetPixel(x_position, y_position);
 	
-	v3f result = v3f(a.Blue, a.Green, a.Red) * (1.f / 255);
+	v3f result = v3f(a.Red, a.Green, a.Blue) * (1.f / 255);
 
 	return result;
 }

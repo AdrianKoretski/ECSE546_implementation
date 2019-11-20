@@ -16,7 +16,6 @@ struct Point
 	v3f color;
 	v3f normal;
 	v2f texture_coordinates;
-	unsigned int texture_ID;
 };
 
 struct OBJ
@@ -24,5 +23,5 @@ struct OBJ
 	std::vector<Point> VBO;
 	std::vector<int> VAO;
 	glm::mat4 transform_matrix;
-	//std::vector<Texture2d> textures;
+	unsigned int texture_ID;
 };
