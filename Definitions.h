@@ -35,7 +35,7 @@ struct Camera
 	v3f up = v3f(0, 1, 0);
 	v3f at = v3f(0, 0, -1);
 	bool is_project = false;
-	glm::mat4 camera_matrix;
+	glm::mat4 camera_matrix = glm::mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 	glm::mat4 perspective_matrix = glm::mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 	void generate_matrix()
 	{
@@ -56,10 +56,10 @@ struct Camera
 		delta.x = delta.y * aspect_ratio;
 		delta.z = 1;
 
-		float l = position.x - delta.x;
-		float r = position.x + delta.x;
-		float b = position.y - delta.y;
-		float t = position.y + delta.y;
+		float l = - delta.x;
+		float r = + delta.x;
+		float b = - delta.y;
+		float t = + delta.y;
 		float n = 1;
 		float f = -1;
 

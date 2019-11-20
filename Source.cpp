@@ -89,7 +89,7 @@ int main()
 	VertexShader vs(&f);
 
 	Camera cam;
-	cam.position = v3f(0, 0, 2);
+	cam.position = v3f(0, 0.5, 2);
 	cam.generate_matrix();
 
 	Scene scene;
@@ -100,9 +100,9 @@ int main()
 
 	vs.render(scene);
 
-	//f.saveAs("test");
+	f.saveAs("test");
 
-	for (int count = 0; count < 628; count++)
+	/*for (int count = 0; count < 628; count++)
 	{
 		scene.obj.at(0).transform_matrix = glm::mat4(
 			cos(theta), 0, -sin(theta), 0,
@@ -114,5 +114,5 @@ int main()
 		vs.render(scene);
 		f.saveAs("test" + std::to_string(count));
 		theta += 0.01;
-	}
+	}*/
 }
