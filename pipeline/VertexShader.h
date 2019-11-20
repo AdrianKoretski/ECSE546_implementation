@@ -8,7 +8,7 @@ class VertexShader
 {
 public:
 	VertexShader(PixelBuffer* pixel_buffer);
-	void render(OBJ obj);
+	void render(Scene scene);
 private:
 	Rasterizer* m_rasterizer;
 };

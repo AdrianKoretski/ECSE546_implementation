@@ -13,17 +13,13 @@ void Rasterizer::render(OBJ obj)
 
 	for (int i = 0; i < obj.VAO.size(); i += 3)
 	{
-		obj.VBO.at(obj.VAO.at(i + 0)).color = v3f(0, i / 3 % 2, 1);
-		obj.VBO.at(obj.VAO.at(i + 1)).color = v3f(0, i / 3 % 2, 1);
-		obj.VBO.at(obj.VAO.at(i + 2)).color = v3f(0, i / 3 % 2, 1);
+		obj.VBO.at(obj.VAO.at(i + 0)).color = v3f(i / 6 % 2, i / 3 % 2, 0.5);
 		interpolate(
 			obj.VBO.at(obj.VAO.at(i + 0)),
 			obj.VBO.at(obj.VAO.at(i + 1)),
 			obj.VBO.at(obj.VAO.at(i + 2))
 		);
 	}
-	/*for (int i = 0; i < obj.VAO.size(); i++)		// TODO: This should interpolate values and generate new fragments.
-		m_interpolated_data.push_back(obj.VBO.at(obj.VAO.at(i)));*/
 	m_fragment_shader->render(m_interpolated_data);
 }
 

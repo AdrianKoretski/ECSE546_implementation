@@ -81,7 +81,17 @@ int main()
 
 	VertexShader vs(&f);
 
-	vs.render(first);
+	Camera cam;
+	cam.position = v3f(1, 0, 2);
+	cam.generate_matrix();
+
+	Scene scene;
+
+	scene.perspective_matrix = scene.perspective_matrix * cam.perspective_matrix * cam.camera_matrix;
+
+	scene.obj.push_back(first);
+
+	vs.render(scene);
 
 	f.saveAs("test");
 }
