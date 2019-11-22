@@ -12,7 +12,7 @@ int main()
 {
 	std::cout << "hello rasterization engine" << std::endl;
 
-	PixelBuffer f(640, 480);
+	PixelBuffer f(640, 480, v3f(1,1,1));
 	float theta = 0;
 
 	std::vector<Point> VBO;
@@ -34,15 +34,31 @@ int main()
 	Point p6;
 	Point p7;
 	Point p8;
-	p0.position = v4f(-0.5, 0.5, 0, 1);
-	p1.position = v4f(0, 0.5, 0, 1);
-	p2.position = v4f(0.5, 0.5, 0, 1);
-	p3.position = v4f(-0.5, 0, 0, 1);
-	p4.position = v4f(0, 0, 0, 1);
-	p5.position = v4f(0.5, 0, 0, 1);
+	p0.position = v4f(-2, 2, -1, 1);
+	p0.color = v3f(1, 0, 0);
+	p0.texture_coordinates = v3f(0, 1, 0);
+	p1.position = v4f(2, 2, -1, 1);
+	p1.color = v3f(0, 1, 0);
+	p1.texture_coordinates = v3f(1, 1, 0);
+
+	p2.position = v4f(2, 2, 0, 1);
+	p2.color = v3f(0, 0, 1);
+
+	p3.position = v4f(-2, -2, 0, 1);
+	p3.color = v3f(1, 1, 0);
+	p3.texture_coordinates = v3f(0, 0, 0);
+	p4.position = v4f(2, -2, 0, 1);
+	p4.color = v3f(1, 0, 1);
+	p4.texture_coordinates = v3f(1, 0, 0);
+
+	p5.position = v4f(1, 0, 0, 1);
+	p5.color = v3f(0, 1, 1);
 	p6.position = v4f(-0.5, -0.5, 0, 1);
+	p6.color = v3f(1, 1, 1);
 	p7.position = v4f(0, -0.5, 0, 1);
+	p7.color = v3f(1, 0, 0);
 	p8.position = v4f(0.5, -0.5, 0, 1);
+	p8.color = v3f(0, 0, 1);
 
 
 	VBO.push_back(p0);
@@ -62,7 +78,7 @@ int main()
 	VAO.push_back(3);
 	VAO.push_back(4);
 
-	VAO.push_back(4);
+	/*VAO.push_back(4);
 	VAO.push_back(5);
 	VAO.push_back(2);
 	VAO.push_back(4);
@@ -81,7 +97,7 @@ int main()
 	VAO.push_back(8);
 	VAO.push_back(4);
 	VAO.push_back(8);
-	VAO.push_back(5);
+	VAO.push_back(5);*/
 
 
 	OBJ first{VBO, VAO, transform_matrix};
@@ -89,7 +105,7 @@ int main()
 	VertexShader vs(&f);
 
 	Camera cam;
-	cam.position = v3f(0, 0.5, 2);
+	cam.position = v3f(0, 0, 2);
 	cam.generate_matrix();
 
 	Scene scene;

@@ -13,7 +13,6 @@ void Rasterizer::render(OBJ obj)
 	m_interpolated_data.clear();
 	for (int i = 0; i < obj.VAO.size(); i += 3)
 	{
-		obj.VBO.at(obj.VAO.at(i + 0)).color = v3f(i / 6 % 2, i / 3 % 2, 0.5);
 		interpolate(
 			obj.VBO.at(obj.VAO.at(i + 0)),
 			obj.VBO.at(obj.VAO.at(i + 1)),
@@ -63,11 +62,33 @@ void Rasterizer::interpolate(Point p0, Point p1, Point p2)
 	if (p.position.y < min_y)
 		min_y = p.position.y;
 
+	v2f w_0;
+	v2f w_1;
+	v2f p_0 = v2f(p0.position) * 0.5f + 0.5f;
+	v2f p_1 = v2f(p1.position) * 0.5f + 0.5f;
+	v2f p_2 = v2f(p2.position) * 0.5f + 0.5f;
+
+	float denominator =
+		(p_1.y - p_2.y)
+		* (p_0.x - p_2.x)
+		+ (p_2.x - p_1.x)
+		* (p_0.y - p_2.y);
+
+	w_0 = v2f(
+		p_1.y - p_2.y,
+		p_2.x - p_1.x
+	);
+
+	w_1 = v2f(
+		p_2.y - p_0.y,
+		p_0.x - p_2.x
+	);
 
 	min_x = min_x / 2 + 0.5f;
 	max_x = max_x / 2 + 0.5f;
 	min_y = min_y / 2 + 0.5f;
 	max_y = max_y / 2 + 0.5f;
+
 
 	float d_w = 1.f / m_buffer_width;
 	float d_h = 1.f / m_buffer_height;
@@ -76,11 +97,16 @@ void Rasterizer::interpolate(Point p0, Point p1, Point p2)
 	{
 		for (float j = float(int(min_y * m_buffer_height)) / m_buffer_height + d_h/2; j <= max_y; j += d_h)
 		{
-			if (isContained(p0.position, p1.position, p2.position, v2f(i * 2 - 1, j * 2 - 1)))
+			float w0 = glm::dot(w_0, v2f(i, j) - v2f(p_2)) / denominator;
+			float w1 = glm::dot(w_1, v2f(i, j) - v2f(p_2)) / denominator;
+			float w2 = 1 - w0 - w1;
+			if (w0 >= 0 && w1 >= 0 && w2 >= 0)
+			//if (isContained(p0.position, p1.position, p2.position, v2f(i * 2 - 1, j * 2 - 1)))
 			{
 				Point new_point;
 				new_point.position = v4f(i, j, 0, 1);
-				new_point.color = p0.color;
+				new_point.color = p0.color * w0 + p1.color * w1 + p2.color * w2;
+				new_point.texture_coordinates = p0.texture_coordinates * w0 + p1.texture_coordinates * w1 + p2.texture_coordinates * w2;
 				m_interpolated_data.push_back(new_point);
 			}
 		}
