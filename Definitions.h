@@ -5,8 +5,11 @@
 #include "include/glm/glm.hpp"
 
 #define v4f glm::vec4
+#define vec4f glm::vec4
 #define v3f glm::vec3
+#define vec3f glm::vec3
 #define v2f glm::vec2
+#define vec2f glm::vec2
 
 //class Texture2d;
 
@@ -85,4 +88,50 @@ struct Scene
 {
 	std::vector<OBJ> obj;
 	glm::mat4 perspective_matrix = glm::mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+};
+
+struct BarycentricInterpolation
+{
+	v2f pre_w0;
+	v2f pre_w1;
+	float denominator;
+	v2f p2;
+
+	float weight_0;
+	float weight_1;
+	float weight_2;
+
+	void precompute(v3f p0, v3f p1, v3f p2)
+	{
+		denominator =
+			(p1.y - p2.y)
+			* (p0.x - p2.x)
+			+ (p2.x - p1.x)
+			* (p0.y - p2.y);
+
+		pre_w0 = v2f(
+			p1.y - p2.y,
+			p2.x - p1.x
+		);
+
+		pre_w1 = v2f(
+			p2.y - p0.y,
+			p0.x - p2.x
+		);
+		this->p2 = p2;
+	}
+
+	void computeWeights(v2f point)
+	{
+		weight_0 = glm::dot(pre_w0, point - p2) / denominator;
+		weight_1 = glm::dot(pre_w1, point - p2) / denominator;
+		weight_2 = 1 - weight_0 - weight_1;
+	}
+
+	bool isPointValid()
+	{
+		if (weight_0 < 0 || weight_1 < 0 || weight_2 < 0)
+			return false;
+		return true;
+	}
 };

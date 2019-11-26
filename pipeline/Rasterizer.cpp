@@ -22,98 +22,54 @@ void Rasterizer::render(OBJ obj)
 	m_fragment_shader->render(m_interpolated_data);
 }
 
+v4f Rasterizer::getMinMax(Point p, v4f min_max)
+{
+	// min_max: x = min_x	y = max_x	z = min_y	w = max_y
+
+	if (p.position.x > min_max.y)
+		min_max.y = p.position.x;
+	if (p.position.x < min_max.x)
+		min_max.x = p.position.x;
+	if (p.position.y > min_max.w)
+		min_max.w = p.position.y;
+	if (p.position.y < min_max.z)
+		min_max.z = p.position.y;
+	return min_max;
+}
+
 void Rasterizer::interpolate(Point p0, Point p1, Point p2)
 {
-	float max_x = -1;
-	float min_x = 1;
-	float max_y = -1;
-	float min_y = 1;
+	v4f min_max = v4f(1, -1, 1, -1);
 
-	Point p = p0;				// TODO: fix this jank.
+	min_max = getMinMax(p0, min_max);
+	min_max = getMinMax(p1, min_max);
+	min_max = getMinMax(p2, min_max);
 
-	if (p.position.x > max_x)
-		max_x = p.position.x;
-	if (p.position.x < min_x)
-		min_x = p.position.x;
-	if (p.position.y > max_y)
-		max_y = p.position.y;
-	if (p.position.y < min_y)
-		min_y = p.position.y;
+	BarycentricInterpolation barry;
 
-	p = p1;
+	barry.precompute(p0.position, p1.position, p2.position);
 
-	if (p.position.x > max_x)
-		max_x = p.position.x;
-	if (p.position.x < min_x)
-		min_x = p.position.x;
-	if (p.position.y > max_y)
-		max_y = p.position.y;
-	if (p.position.y < min_y)
-		min_y = p.position.y;
+	float d_w = 2.f / m_buffer_width;
+	float d_h = 2.f / m_buffer_height;
 
-	p = p2;
-
-	if (p.position.x > max_x)
-		max_x = p.position.x;
-	if (p.position.x < min_x)
-		min_x = p.position.x;
-	if (p.position.y > max_y)
-		max_y = p.position.y;
-	if (p.position.y < min_y)
-		min_y = p.position.y;
-
-	v2f w_0;
-	v2f w_1;
-	v2f p_0 = v2f(p0.position) * 0.5f + 0.5f;
-	v2f p_1 = v2f(p1.position) * 0.5f + 0.5f;
-	v2f p_2 = v2f(p2.position) * 0.5f + 0.5f;
-
-	float denominator =
-		(p_1.y - p_2.y)
-		* (p_0.x - p_2.x)
-		+ (p_2.x - p_1.x)
-		* (p_0.y - p_2.y);
-
-	w_0 = v2f(
-		p_1.y - p_2.y,
-		p_2.x - p_1.x
-	);
-
-	w_1 = v2f(
-		p_2.y - p_0.y,
-		p_0.x - p_2.x
-	);
-
-	min_x = min_x / 2 + 0.5f;
-	max_x = max_x / 2 + 0.5f;
-	min_y = min_y / 2 + 0.5f;
-	max_y = max_y / 2 + 0.5f;
-
-
-	float d_w = 1.f / m_buffer_width;
-	float d_h = 1.f / m_buffer_height;
-
-	for (float i = float(int(min_x * m_buffer_width)) / m_buffer_width + d_w/2; i <= max_x; i += d_w)	// TODO: This is janky. It might need to change.
+	for (float i = min_max.x + d_w/2; i <= min_max.y; i += d_w)
 	{
-		for (float j = float(int(min_y * m_buffer_height)) / m_buffer_height + d_h/2; j <= max_y; j += d_h)
+		for (float j = min_max.z + d_h/2; j <= min_max.w; j += d_h)
 		{
-			float w0 = glm::dot(w_0, v2f(i, j) - v2f(p_2)) / denominator;
-			float w1 = glm::dot(w_1, v2f(i, j) - v2f(p_2)) / denominator;
-			float w2 = 1 - w0 - w1;
-			if (w0 >= 0 && w1 >= 0 && w2 >= 0)
-			//if (isContained(p0.position, p1.position, p2.position, v2f(i * 2 - 1, j * 2 - 1)))
+			barry.computeWeights(v2f(i, j));
+			if (barry.isPointValid())
 			{
 				Point new_point;
 				new_point.position = v4f(i, j, 0, 1);
-				new_point.color = p0.color * w0 + p1.color * w1 + p2.color * w2;
-				new_point.texture_coordinates = p0.texture_coordinates * w0 + p1.texture_coordinates * w1 + p2.texture_coordinates * w2;
+				new_point.color = p0.color * barry.weight_0 + p1.color * barry.weight_1 + p2.color * barry.weight_2;
+				new_point.texture_coordinates = p0.texture_coordinates * barry.weight_0 + p1.texture_coordinates * barry.weight_1 + p2.texture_coordinates * barry.weight_2;
 				m_interpolated_data.push_back(new_point);
 			}
 		}
 	}
 }
 
-bool Rasterizer::isContained(v3f p0, v3f p1, v3f p2, v2f p)		// TODO: optimise.
+bool Rasterizer::isContained(v3f p0, v3f p1, v3f p2, v2f p)		// Old depricated solution.
 {
 	bool i0 = false;
 	bool i1 = false;
