@@ -46,7 +46,9 @@ void Rasterizer::interpolate(Point p0, Point p1, Point p2)
 	min_max = getMinMax(p2, min_max);
 
 	BarycentricInterpolation barry;
+	BarycentricInterpolation harry;
 
+	harry.precompute(p0.position * p0.position.w, p1.position * p1.position.w, p2.position * p2.position.w);
 	barry.precompute(p0.position, p1.position, p2.position);
 
 	float d_w = 2.f / m_buffer_width;
@@ -61,8 +63,22 @@ void Rasterizer::interpolate(Point p0, Point p1, Point p2)
 			{
 				Point new_point;
 				new_point.position = v4f(i, j, 0, 1);
-				new_point.color = p0.color * barry.weight_0 + p1.color * barry.weight_1 + p2.color * barry.weight_2;
-				new_point.texture_coordinates = p0.texture_coordinates * barry.weight_0 + p1.texture_coordinates * barry.weight_1 + p2.texture_coordinates * barry.weight_2;
+				float w =
+					1.f / (
+						1.f / p0.position.w * barry.weight_0 +
+						1.f / p1.position.w * barry.weight_1 +
+						1.f / p2.position.w * barry.weight_2);
+
+				harry.computeWeights(v2f(i, j) * w);
+
+				new_point.color = 
+					p0.color * barry.weight_0 + 
+					p1.color * barry.weight_1 + 
+					p2.color * barry.weight_2;
+				new_point.texture_coordinates = 
+					p0.texture_coordinates * harry.weight_0 + 
+					p1.texture_coordinates * harry.weight_1 + 
+					p2.texture_coordinates * harry.weight_2;
 				m_interpolated_data.push_back(new_point);
 			}
 		}
