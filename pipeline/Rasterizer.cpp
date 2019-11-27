@@ -69,6 +69,8 @@ void Rasterizer::interpolate(Point p0, Point p1, Point p2)
 						1.f / p1.position.w * barry.weight_1 +
 						1.f / p2.position.w * barry.weight_2);
 
+				new_point.position.w = w;
+
 				harry.computeWeights(v2f(i, j) * w);
 
 				new_point.color = 

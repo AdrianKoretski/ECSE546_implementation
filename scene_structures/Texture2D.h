@@ -17,4 +17,3 @@ private:
 	BMP m_image;
 	bool m_is_tiled;
 };
-

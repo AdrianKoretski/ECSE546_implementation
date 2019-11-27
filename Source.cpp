@@ -12,7 +12,7 @@ int main()
 {
 	std::cout << "hello rasterization engine" << std::endl;
 
-	PixelBuffer f(640, 480, v3f(0.0,0.15,0.3));
+	PixelBuffer f(1920, 1080, v3f(0.0,0.15,0.3));
 	float theta = 0;
 
 	std::vector<Point> VBO;
@@ -34,13 +34,12 @@ int main()
 	Point p6;
 	Point p7;
 	Point p8;
-	p0.position = v4f(-2, 2, -1, 1);
+	/*p0.position = v4f(-2, 2, -1, 1);
 	p0.color = v3f(1, 0, 0);
 	p0.texture_coordinates = v3f(0, 0, 0);
 	p1.position = v4f(2, 2, -1, 1);
 	p1.color = v3f(0, 1, 0);
 	p1.texture_coordinates = v3f(1, 0, 0);
-
 	p2.position = v4f(2, 2, 0, 1);
 	p2.color = v3f(0, 0, 1);
 
@@ -58,8 +57,43 @@ int main()
 	p7.position = v4f(0, -0.5, 0, 1);
 	p7.color = v3f(1, 0, 0);
 	p8.position = v4f(0.5, -0.5, 0, 1);
-	p8.color = v3f(0, 0, 1);
+	p8.color = v3f(0, 0, 1);*/
 
+	p0.position = v4f(-1.5, 2, -0.5, 1);
+	p0.color = v3f(1, 0, 0);
+	p0.texture_coordinates = v3f(1, 1, 0);
+
+	p1.position = v4f(-1.5, -2, -1, 1);
+	p1.color = v3f(1, 0, 0);
+	p1.texture_coordinates = v3f(1, 0, 0);
+
+	p2.position = v4f(-1, -2, -1, 1);
+	p2.color = v3f(1, 0, 0);
+	p2.texture_coordinates = v3f(0, 0, 0);
+
+	p3.position = v4f(2, -0.5, -0.5, 1);
+	p3.color = v3f(0, 1, 0);
+	p3.texture_coordinates = v3f(1, 1, 0);
+
+	p4.position = v4f(-2, 2, -1, 1);
+	p4.color = v3f(0, 1, 0);
+	p4.texture_coordinates = v3f(1, 0, 0);
+
+	p5.position = v4f(-2, 1.5, -1, 1);
+	p5.color = v3f(0, 1, 0);
+	p5.texture_coordinates = v3f(0, 0, 0);
+
+	p6.position = v4f(-2, -1.5, -0.5, 1);
+	p6.color = v3f(0, 0, 1);
+	p6.texture_coordinates = v3f(1, 1, 0);
+
+	p7.position = v4f(2, 0.5, -1, 1);
+	p7.color = v3f(0, 0, 1);
+	p7.texture_coordinates = v3f(1, 0, 0);
+
+	p8.position = v4f(2, 0, -1, 1);
+	p8.color = v3f(0, 0, 1);
+	p8.texture_coordinates = v3f(0, 0, 0);
 
 	VBO.push_back(p0);
 	VBO.push_back(p1);
@@ -73,10 +107,16 @@ int main()
 
 	VAO.push_back(1);
 	VAO.push_back(0);
+	VAO.push_back(2);
 	VAO.push_back(4);
-	VAO.push_back(0);
 	VAO.push_back(3);
-	VAO.push_back(4);
+	VAO.push_back(5);
+	VAO.push_back(7);
+	VAO.push_back(6);
+	VAO.push_back(8);
+	/*VAO.push_back(0);
+	VAO.push_back(3);
+	VAO.push_back(4);*/
 
 	/*VAO.push_back(4);
 	VAO.push_back(5);

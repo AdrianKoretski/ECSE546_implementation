@@ -11,16 +11,22 @@ public:
 
 	void clearBuffer();
 
-	void setPixel(int x, int y, v3f color);
+	void setPixel(int x, int y, v3f color, int depth);
 
-	v3f getPixel(int x, int y);
+	v3f getPixelColor(int x, int y);
+	int getPixelDepth(int x, int y);
 
 	void saveAs(std::string file_name);
 
 	int getWidth();
 	int getHeight();
+
+	int getDepthBufferSize();
 private:
 	v3f* m_data;
+	int* m_z_buffer;
+
+	int m_depth_buffer_size = 65536;
 
 	BMP m_image;
 
