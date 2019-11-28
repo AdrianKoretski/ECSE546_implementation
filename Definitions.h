@@ -32,9 +32,9 @@ struct OBJ
 
 struct Camera
 {
-	float aspect_ratio = 1.33f;
-	float fov = 1.57f;
-	v3f position = v3f(0, 0, 1);
+	float aspect_ratio = 1.78f;
+	float fov = 2.f;
+	v3f position = v3f(0, 0, 2);
 	v3f up = v3f(0, 1, 0);
 	v3f at = v3f(0, 0, -1);
 	bool is_project = false;
@@ -94,6 +94,7 @@ struct BarycentricInterpolation
 {
 	v2f pre_w0;
 	v2f pre_w1;
+	v2f pre_w2;
 	float denominator;
 	v2f p2;
 
@@ -118,6 +119,7 @@ struct BarycentricInterpolation
 			p2.y - p0.y,
 			p0.x - p2.x
 		);
+
 		this->p2 = p2;
 	}
 
@@ -125,7 +127,7 @@ struct BarycentricInterpolation
 	{
 		weight_0 = glm::dot(pre_w0, point - p2) / denominator;
 		weight_1 = glm::dot(pre_w1, point - p2) / denominator;
-		weight_2 = 1 - weight_0 - weight_1;
+		weight_2 = 1 - weight_1 - weight_0;
 	}
 
 	bool isPointValid()
