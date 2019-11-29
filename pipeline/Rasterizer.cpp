@@ -22,28 +22,28 @@ void Rasterizer::render(OBJ obj)
 	m_fragment_shader->render(m_interpolated_data);
 }
 
-v4f Rasterizer::getMinMax(Point p, v4f min_max)
+void Rasterizer::getMinMax(Point p)
 {
-	// min_max: x = min_x	y = max_x	z = min_y	w = max_y
-
-	if (p.position.x > min_max.y)
-		min_max.y = p.position.x;
-	if (p.position.x < min_max.x)
-		min_max.x = p.position.x;
-	if (p.position.y > min_max.w)
-		min_max.w = p.position.y;
-	if (p.position.y < min_max.z)
-		min_max.z = p.position.y;
-	return min_max;
+	if (p.position.x > max_x)
+		max_x = p.position.x;
+	if (p.position.x < min_x)
+		min_x = p.position.x;
+	if (p.position.y > max_y)
+		max_y = p.position.y;
+	if (p.position.y < min_y)
+		min_y = p.position.y;
 }
 
 void Rasterizer::interpolate(Point p0, Point p1, Point p2)
 {
-	v4f min_max = v4f(1, -1, 1, -1);
+	min_x = 1;
+	max_x = -1;
+	min_y = 1;
+	max_y = -1;
 
-	min_max = getMinMax(p0, min_max);
-	min_max = getMinMax(p1, min_max);
-	min_max = getMinMax(p2, min_max);
+	getMinMax(p0);
+	getMinMax(p1);
+	getMinMax(p2);
 
 	BarycentricInterpolation barry;
 	BarycentricInterpolation harry;				// TODO: fix this. Fails when the triangle is coplainar to the x or y planes.
@@ -54,9 +54,9 @@ void Rasterizer::interpolate(Point p0, Point p1, Point p2)
 	float d_w = 2.f / m_buffer_width;
 	float d_h = 2.f / m_buffer_height;
 
-	for (int i = min_max.x * m_buffer_width - 1; i <= min_max.y * m_buffer_width; i++)
+	for (int i = min_x * m_buffer_width - 1; i <= max_x * m_buffer_width; i++)
 	{
-		for (int j = min_max.z * m_buffer_height - 1; j <= min_max.w * m_buffer_height; j++)
+		for (int j = min_y * m_buffer_height - 1; j <= max_y * m_buffer_height; j++)
 		{
 			barry.computeWeights(v2f((float(i) + 0.5) / m_buffer_width, (float(j) + 0.5) / m_buffer_height));
 			if (barry.isPointValid())

@@ -18,5 +18,10 @@ private:
 
 	bool isContained(v3f p0, v3f p1, v3f p2, v2f p);
 
-	v4f getMinMax(Point p, v4f min_max);
+	void getMinMax(Point p);
+
+	float min_x = 1;
+	float max_x = -1;
+	float min_y = 1;
+	float max_y = -1;
 };
