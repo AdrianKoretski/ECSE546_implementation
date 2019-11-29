@@ -16,8 +16,6 @@ private:
 	std::vector<Point> m_interpolated_data;
 	FragmentShader* m_fragment_shader;
 
-	bool isContained(v3f p0, v3f p1, v3f p2, v2f p);
-
 	void getMinMax(Point p);
 
 	float min_x = 1;
