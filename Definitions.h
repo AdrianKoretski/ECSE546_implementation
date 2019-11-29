@@ -102,7 +102,7 @@ struct BarycentricInterpolation
 	float weight_1;
 	float weight_2;
 
-	void precompute(v3f p0, v3f p1, v3f p2)
+	void precompute(v4f p0, v4f p1, v4f p2)
 	{
 		denominator =
 			(p1.y - p2.y)
@@ -121,6 +121,7 @@ struct BarycentricInterpolation
 		);
 
 		this->p2 = p2;
+
 	}
 
 	void computeWeights(v2f point)

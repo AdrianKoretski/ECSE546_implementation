@@ -14,7 +14,7 @@ void VertexShader::render(Scene scene)		// TODO: This should take the points and
 			scene.obj.at(i).VBO.at(j).position = scene.perspective_matrix * scene.obj.at(i).transform_matrix * scene.obj.at(i).VBO.at(j).position;
 			float w = scene.obj.at(i).VBO.at(j).position.w;
 			scene.obj.at(i).VBO.at(j).position = scene.obj.at(i).VBO.at(j).position / w;
-			scene.obj.at(i).VBO.at(j).position.w = w;
+			scene.obj.at(i).VBO.at(j).position.w = 1.f / w;
 		}
 		m_rasterizer->render(scene.obj.at(i));
 	}

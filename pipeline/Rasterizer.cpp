@@ -39,34 +39,16 @@ v4f Rasterizer::getMinMax(Point p, v4f min_max)
 
 void Rasterizer::interpolate(Point p0, Point p1, Point p2)
 {
-	/*p0.position.x += 1;
-	p0.position.y += 1;
-	p1.position.x += 1;
-	p1.position.y += 1;
-	p2.position.x += 1;
-	p2.position.y += 1;*/
 	v4f min_max = v4f(1, -1, 1, -1);
 
 	min_max = getMinMax(p0, min_max);
 	min_max = getMinMax(p1, min_max);
 	min_max = getMinMax(p2, min_max);
 
-	/*min_max.x = int((m_buffer_width / 2) * min_max.x) - 1;
-	min_max.x = min_max.x / (m_buffer_width / 2);
-	min_max.y = int((m_buffer_width / 2) * min_max.y) + 1;
-	min_max.y = min_max.y / (m_buffer_width / 2);
-
-	min_max.z = int((m_buffer_height / 2) * min_max.z) - 1;
-	min_max.z = min_max.z / (m_buffer_height / 2);
-	min_max.w = int((m_buffer_height / 2) * min_max.w) + 1;
-	min_max.w = min_max.w / (m_buffer_height / 2);*/
-
-	//min_max = min_max + v4f(1.f / m_buffer_width, 1.f / m_buffer_width, 1.f / m_buffer_height, 1.f / m_buffer_height);
-
 	BarycentricInterpolation barry;
-	BarycentricInterpolation harry;
+	BarycentricInterpolation harry;				// TODO: fix this. Fails when the triangle is coplainar to the x or y planes.
 
-	harry.precompute(p0.position * p0.position.w, p1.position * p1.position.w, p2.position * p2.position.w);
+	harry.precompute(p0.position * (1.f / p0.position.w), p1.position * (1.f / p1.position.w), p2.position * (1.f / p2.position.w));
 	barry.precompute(p0.position, p1.position, p2.position);
 
 	float d_w = 2.f / m_buffer_width;
@@ -77,28 +59,29 @@ void Rasterizer::interpolate(Point p0, Point p1, Point p2)
 		for (int j = min_max.z * m_buffer_height - 1; j <= min_max.w * m_buffer_height; j++)
 		{
 			barry.computeWeights(v2f((float(i) + 0.5) / m_buffer_width, (float(j) + 0.5) / m_buffer_height));
-			if (barry.isPointValid()/* || isContained(p0.position, p1.position, p2.position, v2f(i, j))*/)
+			if (barry.isPointValid())
 			{
 				Point new_point;
 				new_point.position = v4f(float(i) / m_buffer_width, float(j) / m_buffer_height, 0, 1);
 				float w =
-					1.f / (
-						1.f / p0.position.w * barry.weight_0 +
-						1.f / p1.position.w * barry.weight_1 +
-						1.f / p2.position.w * barry.weight_2);
+						p0.position.w * barry.weight_0 +
+						p1.position.w * barry.weight_1 +
+						p2.position.w * barry.weight_2;
 
 				new_point.position.w = w;
 
-				harry.computeWeights(v2f((float(i) + 0.5) / m_buffer_width, (float(j) + 0.5) / m_buffer_height) * w);
+				harry.computeWeights(v2f((float(i) + 0.5) / m_buffer_width, (float(j) + 0.5) / m_buffer_height) * (1.f / w));
 
 				new_point.color = 
-					p0.color * barry.weight_0 + 
-					p1.color * barry.weight_1 + 
-					p2.color * barry.weight_2;
+					p0.color * harry.weight_0 + 
+					p1.color * harry.weight_1 + 
+					p2.color * harry.weight_2;
+
 				new_point.texture_coordinates = 
 					p0.texture_coordinates * harry.weight_0 + 
 					p1.texture_coordinates * harry.weight_1 + 
 					p2.texture_coordinates * harry.weight_2;
+
 				m_interpolated_data.push_back(new_point);
 			}
 		}

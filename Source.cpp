@@ -69,21 +69,23 @@ int main()
 
 	p0.color = v3f(0, 0, 0);
 	p1.color = v3f(1, 0, 0);
-	p2.color = v3f(0, 1, 0);
-	p3.color = v3f(1, 1, 0);
-	p4.color = v3f(0, 0, 1);
-	p5.color = v3f(1, 0, 1);
+	p2.color = v3f(0, 0, 0);
+	p3.color = v3f(1, 0, 0);
+	p4.color = v3f(0, 1, 1);
+	p5.color = v3f(1, 1, 1);
 	p6.color = v3f(0, 1, 1);
 	p7.color = v3f(1, 1, 1);
 
-	p0.texture_coordinates = v3f(1, 1, 0);
+	p0.texture_coordinates = v3f(0, 0, 0);
 	p1.texture_coordinates = v3f(1, 0, 0);
+
 	p2.texture_coordinates = v3f(0, 0, 0);
-	p3.texture_coordinates = v3f(1, 1, 0);
-	p4.texture_coordinates = v3f(1, 0, 0);
-	p5.texture_coordinates = v3f(0, 0, 0);
-	p6.texture_coordinates = v3f(1, 1, 0);
-	p7.texture_coordinates = v3f(1, 0, 0);
+	p3.texture_coordinates = v3f(1, 0, 0);
+	p4.texture_coordinates = v3f(0, 1, 0);
+	p5.texture_coordinates = v3f(1, 1, 0);
+
+	p6.texture_coordinates = v3f(0, 0, 0);
+	p7.texture_coordinates = v3f(0, 0, 0);
 
 	VBO.push_back(p0);
 	VBO.push_back(p1);
@@ -94,15 +96,15 @@ int main()
 	VBO.push_back(p6);
 	VBO.push_back(p7);
 
-	VAO.push_back(1);
+	VAO.push_back(2);
 	VAO.push_back(3);
-	VAO.push_back(2);
+	VAO.push_back(4);
 
-	VAO.push_back(0);
-	VAO.push_back(1);
-	VAO.push_back(2);
+	VAO.push_back(3);
+	VAO.push_back(5);
+	VAO.push_back(4);
 
-	VAO.push_back(0);
+	/*VAO.push_back(0);
 	VAO.push_back(5);
 	VAO.push_back(1);
 
@@ -140,7 +142,7 @@ int main()
 
 	VAO.push_back(1);
 	VAO.push_back(5);
-	VAO.push_back(3);
+	VAO.push_back(3);*/
 
 	/*VAO.push_back(0);
 	VAO.push_back(3);
@@ -182,17 +184,11 @@ int main()
 
 	scene.obj.push_back(first);
 
-	scene.obj.at(0).transform_matrix = glm::mat4(
-		cos(1.05), 0, sin(1.05), 0,
-		0, 1, 0, 0,
-		-sin(1.05), 0, cos(1.05), 0,
-		0, 0, 0, 1
-	);
 	vs.render(scene);
 
 	f.saveAs("test");
 
-	for (int count = 0; count < 628; count++)
+	/*for (int count = 0; count < 628; count++)
 	{
 		scene.obj.at(0).transform_matrix = glm::mat4(
 			cos(theta), 0, sin(theta), 0,
@@ -230,5 +226,5 @@ int main()
 		vs.render(scene);
 		f.saveAs("movie/test" + std::to_string(count + 2*628));
 		theta += 0.01;
-	}
+	}*/
 }
