@@ -5,7 +5,7 @@ VertexShader::VertexShader(PixelBuffer* pixel_buffer)
 	m_rasterizer = new Rasterizer(pixel_buffer);
 }
 
-void VertexShader::render(Scene scene)		// TODO: This should take the points and transform them according to the transform matrix.
+void VertexShader::render(Scene scene)
 {
 	for (int i = 0; i < scene.obj.size(); i++)
 	{

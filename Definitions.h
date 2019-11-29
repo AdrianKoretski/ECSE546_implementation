@@ -137,4 +137,10 @@ struct BarycentricInterpolation
 			return false;
 		return true;
 	}
+
+	void interpolate(Point value_0, Point value_1, Point value_2, Point& point) {
+		point.color = value_0.color * weight_0 + value_1.color * weight_1 + value_2.color * weight_2;
+		point.normal = value_0.normal * weight_0 + value_1.normal * weight_1 + value_2.normal * weight_2;
+		point.texture_coordinates = value_0.texture_coordinates * weight_0 + value_1.texture_coordinates * weight_1 + value_2.texture_coordinates * weight_2;
+	}
 };

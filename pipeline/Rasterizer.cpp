@@ -62,25 +62,15 @@ void Rasterizer::interpolate(Point p0, Point p1, Point p2)
 			if (barry.isPointValid())
 			{
 				Point new_point;
-				new_point.position = v4f(float(i) / m_buffer_width, float(j) / m_buffer_height, 0, 1);
 				float w =
 						p0.position.w * barry.weight_0 +
 						p1.position.w * barry.weight_1 +
 						p2.position.w * barry.weight_2;
+				new_point.position = v4f(float(i) / m_buffer_width, float(j) / m_buffer_height, 1.f / w, w);
 
-				new_point.position.w = w;
+				harry.computeWeights(v2f((float(i) + 0.5) / m_buffer_width, (float(j) + 0.5) / m_buffer_height) * new_point.position.z);
 
-				harry.computeWeights(v2f((float(i) + 0.5) / m_buffer_width, (float(j) + 0.5) / m_buffer_height) * (1.f / w));
-
-				new_point.color = 
-					p0.color * harry.weight_0 + 
-					p1.color * harry.weight_1 + 
-					p2.color * harry.weight_2;
-
-				new_point.texture_coordinates = 
-					p0.texture_coordinates * harry.weight_0 + 
-					p1.texture_coordinates * harry.weight_1 + 
-					p2.texture_coordinates * harry.weight_2;
+				harry.interpolate(p0, p1, p2, new_point);
 
 				m_interpolated_data.push_back(new_point);
 			}
