@@ -1,5 +1,7 @@
 #include "Interpolator.h"
 
+extern bool use_correct_interpolation;
+
 Interpolator::Interpolator(Point p0, Point p1, Point p2)
 {
 	m_p0 = p0;
@@ -94,16 +96,34 @@ bool Interpolator::isContained()
 
 void Interpolator::interpolate()
 {
-	m_point_of_interest->color = 
-		m_p0.color * m_weights.x + 
-		m_p1.color * m_weights.y + 
-		m_p2.color * m_weights.z;
-	m_point_of_interest->normal = 
-		m_p0.normal * m_weights.x + 
-		m_p1.normal * m_weights.y + 
-		m_p2.normal * m_weights.z;
-	m_point_of_interest->texture_coordinates = 
-		m_p0.texture_coordinates * m_ws_weights.x +
-		m_p1.texture_coordinates * m_ws_weights.y +
-		m_p2.texture_coordinates * m_ws_weights.z;
+	if (use_correct_interpolation)
+	{
+		m_point_of_interest->color =
+			m_p0.color * m_ws_weights.x +
+			m_p1.color * m_ws_weights.y +
+			m_p2.color * m_ws_weights.z;
+		m_point_of_interest->normal =
+			m_p0.normal * m_ws_weights.x +
+			m_p1.normal * m_ws_weights.y +
+			m_p2.normal * m_ws_weights.z;
+		m_point_of_interest->texture_coordinates =
+			m_p0.texture_coordinates * m_ws_weights.x +
+			m_p1.texture_coordinates * m_ws_weights.y +
+			m_p2.texture_coordinates * m_ws_weights.z;
+	}
+	else
+	{
+		m_point_of_interest->color =
+			m_p0.color * m_weights.x +
+			m_p1.color * m_weights.y +
+			m_p2.color * m_weights.z;
+		m_point_of_interest->normal =
+			m_p0.normal * m_weights.x +
+			m_p1.normal * m_weights.y +
+			m_p2.normal * m_weights.z;
+		m_point_of_interest->texture_coordinates =
+			m_p0.texture_coordinates * m_weights.x +
+			m_p1.texture_coordinates * m_weights.y +
+			m_p2.texture_coordinates * m_weights.z;
+	}
 }
