@@ -92,6 +92,9 @@ struct Scene
 
 struct BarycentricInterpolation
 {
+	glm::mat4 rotation_matrix;
+
+
 	v2f pre_w0;
 	v2f pre_w1;
 	v2f pre_w2;
@@ -109,7 +112,6 @@ struct BarycentricInterpolation
 			* (p0.x - p2.x)
 			+ (p2.x - p1.x)
 			* (p0.y - p2.y);
-
 		pre_w0 = v2f(
 			p1.y - p2.y,
 			p2.x - p1.x
@@ -119,9 +121,40 @@ struct BarycentricInterpolation
 			p2.y - p0.y,
 			p0.x - p2.x
 		);
-
 		this->p2 = p2;
 
+
+
+		/*v3f p_0 = v3f(p0.x, p0.y, 1.f / p0.w);
+		v3f p_1 = v3f(p1.x, p1.y, 1.f / p1.w);
+		v3f p_2 = v3f(p2.x, p2.y, 1.f / p2.w);
+
+
+		v3f t = glm::normalize(p_1 - p_0);
+		v3f n = glm::normalize(glm::cross(t, p_2 - p_0));
+		v3f u = glm::normalize(glm::cross(t, n));
+
+		rotation_matrix = glm::mat4{
+			t.x, t.y, t.z, 0, 
+			u.x, u.y, u.z, 0, 
+			n.x, n.y, n.z, 0,
+			p_0.x, p_0.y, p_0.z, 1
+		};
+
+		rotation_matrix = glm::inverse(rotation_matrix);
+
+		v4f p__0 = v4f(p_0, 1);
+		v4f p__1 = v4f(p_1, 1);
+		v4f p__2 = v4f(p_2, 1);
+		std::cout << p__0.x << " " << p__0.y << " " << p__0.z << " " << p__0.w << std::endl;
+		p__0 = rotation_matrix * p__0;
+		std::cout << p__0.x << " " << p__0.y << " " << p__0.z << " " << p__0.w << std::endl << std::endl;
+		std::cout << p__1.x << " " << p__1.y << " " << p__1.z << " " << p__1.w << std::endl;
+		p__1 = rotation_matrix * p__1;
+		std::cout << p__1.x << " " << p__1.y << " " << p__1.z << " " << p__1.w << std::endl << std::endl;
+		std::cout << p__2.x << " " << p__2.y << " " << p__2.z << " " << p__2.w << std::endl;
+		p__2 = rotation_matrix * p__2;
+		std::cout << p__2.x << " " << p__2.y << " " << p__2.z << " " << p__2.w << std::endl << std::endl;*/
 	}
 
 	void computeWeights(v2f point)

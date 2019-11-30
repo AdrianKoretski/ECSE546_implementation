@@ -20,5 +20,6 @@ void FragmentShader::render(std::vector<Point> data)
 
 
 		m_pixel_buffer->setPixel(vp_x, vp_y, t.sample(data.at(i).texture_coordinates), m_pixel_buffer->getDepthBufferSize() - z_depth);
+		//m_pixel_buffer->setPixel(vp_x, vp_y, data.at(i).color, m_pixel_buffer->getDepthBufferSize() - z_depth);
 	}
 }

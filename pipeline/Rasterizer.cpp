@@ -1,4 +1,5 @@
 #include "Rasterizer.h"
+#include "..//Interpolator.h"
 #include <vector>
 
 Rasterizer::Rasterizer(PixelBuffer* pixel_buffer)
@@ -45,11 +46,7 @@ void Rasterizer::interpolate(Point p0, Point p1, Point p2)
 	getMinMax(p1);
 	getMinMax(p2);
 
-	BarycentricInterpolation barry;
-	BarycentricInterpolation harry;				// TODO: fix this. Fails when the triangle is coplainar to the x or y planes.
-
-	harry.precompute(p0.position * (1.f / p0.position.w), p1.position * (1.f / p1.position.w), p2.position * (1.f / p2.position.w));
-	barry.precompute(p0.position, p1.position, p2.position);
+	Interpolator barry(p0, p1, p2);
 
 	float d_w = 2.f / m_buffer_width;
 	float d_h = 2.f / m_buffer_height;
@@ -58,20 +55,16 @@ void Rasterizer::interpolate(Point p0, Point p1, Point p2)
 	{
 		for (int j = min_y * m_buffer_height - 1; j <= max_y * m_buffer_height; j++)
 		{
-			barry.computeWeights(v2f((float(i) + 0.5) / m_buffer_width, (float(j) + 0.5) / m_buffer_height));
-			if (barry.isPointValid())
+
+			Point new_point;
+			new_point.position = v4f((float(i) + 0.5) / m_buffer_width, (float(j) + 0.5) / m_buffer_height, 0, 1);
+			barry.setPointOfInterest(new_point);
+			barry.computeWeights();
+			if (barry.isContained())
 			{
-				Point new_point;
-				float w =
-						p0.position.w * barry.weight_0 +
-						p1.position.w * barry.weight_1 +
-						p2.position.w * barry.weight_2;
-				new_point.position = v4f(float(i) / m_buffer_width, float(j) / m_buffer_height, 1.f / w, w);
-
-				harry.computeWeights(v2f((float(i) + 0.5) / m_buffer_width, (float(j) + 0.5) / m_buffer_height) * new_point.position.z);
-
-				harry.interpolate(p0, p1, p2, new_point);
-
+				barry.interpolate();
+				/*new_point.position.x = float(i) / m_buffer_width;
+				new_point.position.y = float(j) / m_buffer_height;*/
 				m_interpolated_data.push_back(new_point);
 			}
 		}

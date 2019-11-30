@@ -60,10 +60,12 @@ int main()
 
 	p0.position = v4f(-1, -1, -1, 1);
 	p1.position = v4f(1, -1, -1, 1);
-	p2.position = v4f(-1, -1, 1, 1);
-	p3.position = v4f(1, -1, 1, 1);
-	p4.position = v4f(-1, 1, -1, 1);
-	p5.position = v4f(1, 1, -1, 1);
+
+	p2.position = v4f(-1, 2, -1, 1);
+	p3.position = v4f(1, 2, -1, 1);
+	p4.position = v4f(-1, 2, 1, 1);
+	p5.position = v4f(1, 2, 1, 1);
+
 	p6.position = v4f(-1, 1, 1, 1);
 	p7.position = v4f(1, 1, 1, 1);
 
