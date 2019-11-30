@@ -11,8 +11,6 @@
 #define v2f glm::vec2
 #define vec2f glm::vec2
 
-//class Texture2d;
-
 struct Point
 {
 	unsigned int vertex_ID;
